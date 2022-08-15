@@ -7,7 +7,7 @@
 1. Clone the Repository
 
 ```
-git clone https://github.com/WildCodeSchool/2109-wns-remote2-excelant.git
+git clone https://github.com/Lionel21/YouTube-API.git
 cd <app-name>
 ```
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { ApiContext } from "../../context/ApiContext";
 import useFetchData from "../../hooks/useFetchData";
 import Search from "./components/search/Search";
@@ -6,36 +6,15 @@ import Loading from "../../components/loading/Loading";
 import styles from "./Homepage.module.scss";
 
 const Homepage = () => {
-    const [videos, setVideos] = useState([]);
     const [filter, setFilter] = useState("");
     const BASE_URL_API = useContext(ApiContext);
-    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setIsLoading(true);
-                const response = await fetch(`${BASE_URL_API}?part=snippet&playlistId=PLjwdMgw5TTLX1tQ1qDNHTsy_lrkCt4VW3&maxResults=10&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`);
-                console.log("response", response);
-                if (response.ok) {
-                    const newData = await response.json();
-                    setVideos(newData.items);
-                } else {
-                    alert(`Oops! Error! ${response.status}`);
-                }
-            } catch (e) {
-                alert(`Oops! Error! ${e.message}`);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchData();
-    }, [BASE_URL_API]);
+    const [[videos], isLoading] = useFetchData(`${BASE_URL_API}?part=snippet&playlistId=PLjwdMgw5TTLX1tQ1qDNHTsy_lrkCt4VW3&maxResults=10&key=${process.env.REACT_APP_YOUTUBE_API_KEY}`);
 
     return (
-        <div className={`d-flex flex-column flex-fill container p-20`}>
+        <div className={`d-flex flex-column flex-fill container`}>
             <h1 className={`my-3`}>Formation TypeScript - Grafikart</h1>
-            <div className={`d-flex flex-column flex-fill card`}>
+            <div className={`d-flex flex-column flex-fill card p-3`}>
                 <Search setFilter={setFilter} />
                 {isLoading && !videos.length ? (
                     <Loading />
@@ -56,18 +35,10 @@ const Homepage = () => {
                                             </div>
                                             <div className={`d-flex flex-column justify-content-center align-items-center ${styles.recipeTitle}`}>
                                                 <h3 className={`${styles.title} mb-2`}>{title}</h3>
+                                                <p>{channelTitle}</p>
                                             </div>
                                         </a>
                                     </div>
-                                    // <li key={id} className={`${styles.card}`}>
-                                    //     <a href={`https://www.youtube.com/watch?v=${resourceId.videoId}`}>
-                                    //         <p>
-                                    //             <img src={medium.url} />
-                                    //         </p>
-                                    //         <h3>{title}</h3>
-                                    //         <p>{channelTitle}</p>
-                                    //     </a>
-                                    // </li>
                                 );
                             })
                         }
